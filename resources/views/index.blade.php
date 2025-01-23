@@ -12,7 +12,6 @@
                 <a href="#" class="text-white hover:text-orange-200 font-semibold">Contact</a>
             </div>
 
-
             <hr class="border-t-2 border-orange-500 mx-16 mb-4">
         </header>
 
@@ -32,8 +31,6 @@
                     </div>
                 </div>
             </section>
-
-
 
             <section class="mb-12 text-center mb-12">
                 <h2 class="text-3xl font-semibold text-orange-500 mb-8">Hobby's</h2>
@@ -101,7 +98,20 @@
             </section>
 
             <section class="mb-12 text-center">
-                <h2 class="text-3xl font-semibold text-orange-500 mb-8 ">Projecten</h2>
+                <h2 class="text-3xl font-semibold text-orange-500 mb-8">Projecten</h2>
+
+                <div class="search__filters">
+                    <form method="GET" action="{{ route('projects.index') }}">
+                        <select name="type" class="search__filters-select">
+                            <option value="">All Types</option>
+                            <option value="web" {{ request('type') == 'web' ? 'selected' : '' }}>Web</option>
+                            <option value="native" {{ request('type') == 'native' ? 'selected' : '' }}>Native</option>
+                        </select>
+                        <button type="submit" class="ml-4 bg-orange-500 text-white py-2 px-4 rounded-lg">
+                            Filter
+                        </button>
+                    </form>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach ($projects as $project)
@@ -109,18 +119,37 @@
                         @if($project->tags->isNotEmpty())
                         <div class="absolute top-2 left-2">
                             @foreach($project->tags as $tag)
-                            <span
-                                class="bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded-full shadow-md mr-2">
+                            <span class="bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded-full shadow-md mr-2">
                                 {{ $tag->name }}
                             </span>
                             @endforeach
                         </div>
                         @endif
 
-                        <img
-                            src="{{ asset('storage/' . $project->image_path) }}"
-                            alt="{{ $project->title }}"
-                            class="w-full h-56 object-cover rounded-t-lg">
+                        <div id="carousel{{ $project->id }}" class="carousel slide mb-4" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                @foreach($project->images as $index => $image)
+                                <li data-target="#carousel{{ $project->id }}" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+                                @endforeach
+                            </ol>
+
+                            <div class="carousel-inner">
+                                @foreach($project->images as $index => $image)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $project->title }}" class="d-block w-100 h-56 object-cover">
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <a class="carousel-control-prev" href="#carousel{{ $project->id }}" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel{{ $project->id }}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
 
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-orange-500">{{ $project->title }}</h3>
@@ -129,85 +158,83 @@
                     </div>
                     @endforeach
                 </div>
+            </section>
 
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-                <section class="mb-12 text-center">
-                    <h2 class="text-3xl font-semibold text-orange-500 mb-6 underline">Werkervaring</h2>
-                    <div class="space-y-8">
-                        <div class="relative">
-                            <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
-                            <div class="grid grid-cols-12 items-center py-6 px-8">
-                                <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">Tuincentrum</span>
-                                <span class="col-span-3 text-xl text-white font-bold text-center">Medewerker</span>
-                                <span class="col-span-6 text-sm text-orange-300 text-right">Verantwoordelijk voor het bijvullen van schappen en het adviseren van klanten over tuinartikelen.</span>
-                            </div>
-                            <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
+            <section class="mb-12 text-center">
+                <h2 class="text-3xl font-semibold text-orange-500 mb-6 underline">Werkervaring</h2>
+                <div class="space-y-8">
+                    <div class="relative">
+                        <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
+                        <div class="grid grid-cols-12 items-center py-6 px-8">
+                            <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">Tuincentrum</span>
+                            <span class="col-span-3 text-xl text-white font-bold text-center">Medewerker</span>
+                            <span class="col-span-6 text-sm text-orange-300 text-right">Verantwoordelijk voor het bijvullen van schappen en het adviseren van klanten over tuinartikelen.</span>
                         </div>
-
-                        <div class="relative">
-                            <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
-                            <div class="grid grid-cols-12 items-center py-6 px-8">
-                                <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">Syntec-IT</span>
-                                <span class="col-span-3 text-xl text-white font-bold text-center">Stagiair</span>
-                                <span class="col-span-6 text-sm text-orange-300 text-right">Gewerkt aan het ontwikkelen en testen van softwareoplossingen voor klanten.</span>
-                            </div>
-                            <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
-                        </div>
-
-                        <div class="relative">
-                            <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
-                            <div class="grid grid-cols-12 items-center py-6 px-8">
-                                <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">LOYYO</span>
-                                <span class="col-span-3 text-xl text-white font-bold text-center">Stagiair</span>
-                                <span class="col-span-6 text-sm text-orange-300 text-right">Opzetten en implementeren van nieuwe features in webapplicaties en verbeteren van bestaande systemen.</span>
-                            </div>
-                            <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
-                        </div>
+                        <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
                     </div>
-                </section>
 
-
-                <section>
-                    <h2>kennis en vaardigheden</h2>
-                </section>
-
-                <section class="mb-12 w-full text-white text-start bg-opacity-10">
-                    <div class="flex justify-between gap-16 mx-auto max-w-7xl py-12 px-6">
-                        <div class="w-2/4">
-                            <h1 class="text-4xl font-bold text-orange-500 mb-4">Contact</h1>
-                            <p class="text-lg mb-6">
-                                Als je vragen hebt, stuur me gerust een bericht. Ik beantwoord graag alle vragen die je hebt.
-                                Je kunt me bereiken via e-mail of het onderstaande formulier.
-                            </p>
-                            <ul class=" text-lg space-y-2">
-                                <li><i class="fas fa-envelope text-orange-500 mr-2"></i>Email: D294484@@edu.curio.nl</li>
-                                <li><i class="fas fa-phone-alt text-orange-500 mr-2"></i>Telefoon: +31 6 22 75 81 54</li>
-                                <li><i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>Adres: Terheijdenseweg 350</li>
-                            </ul>
+                    <div class="relative">
+                        <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
+                        <div class="grid grid-cols-12 items-center py-6 px-8">
+                            <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">Syntec-IT</span>
+                            <span class="col-span-3 text-xl text-white font-bold text-center">Stagiair</span>
+                            <span class="col-span-6 text-sm text-orange-300 text-right">Gewerkt aan het ontwikkelen en testen van softwareoplossingen voor klanten.</span>
                         </div>
+                        <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
+                    </div>
 
-                        <div class="w-2/3">
-                            <form class="bg-gradient-to-br rounded-xl p-8">
-                                <div class="grid grid-cols-1 gap-6 mb-6">
-                                    <div>
-                                        <label for="name" class="block text-orange-500 font-medium mb-2">Naam</label>
-                                        <input id="name" type="text" placeholder="Uw naam" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                                    </div>
-                                    <div>
-                                        <label for="email" class="block text-orange-500 font-medium mb-2">Email</label>
-                                        <input id="email" type="email" placeholder="Uw emailadres" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                                    </div>
-                                    <div>
-                                        <label for="message" class="block text-orange-500 font-medium mb-2">Bericht</label>
-                                        <textarea id="message" placeholder="Uw bericht" rows="6" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
-                                    </div>
+                    <div class="relative">
+                        <hr class="border-t-2 border-orange-500 absolute top-0 left-0 w-full">
+                        <div class="grid grid-cols-12 items-center py-6 px-8">
+                            <span class="col-span-3 text-lg text-orange-400 font-semibold text-left">LOYYO</span>
+                            <span class="col-span-3 text-xl text-white font-bold text-center">Stagiair</span>
+                            <span class="col-span-6 text-sm text-orange-300 text-right">Opzetten en implementeren van nieuwe features in webapplicaties en verbeteren van bestaande systemen.</span>
+                        </div>
+                        <hr class="border-t-2 border-orange-500 absolute bottom-0 left-0 w-full">
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12 w-full text-white text-start bg-opacity-10">
+                <div class="flex justify-between gap-16 mx-auto max-w-7xl py-12 px-6">
+                    <div class="w-2/4">
+                        <h1 class="text-4xl font-bold text-orange-500 mb-4">Contact</h1>
+                        <p class="text-lg mb-6">
+                            Als je vragen hebt, stuur me gerust een bericht. Ik beantwoord graag alle vragen die je hebt.
+                            Je kunt me bereiken via e-mail of het onderstaande formulier.
+                        </p>
+                        <ul class=" text-lg space-y-2">
+                            <li><i class="fas fa-envelope text-orange-500 mr-2"></i>Email: D294484@@edu.curio.nl</li>
+                            <li><i class="fas fa-phone-alt text-orange-500 mr-2"></i>Telefoon: +31 6 22 75 81 54</li>
+                            <li><i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>Adres: Terheijdenseweg 350</li>
+                        </ul>
+                    </div>
+
+                    <div class="w-2/3">
+                        <form class="bg-gradient-to-br rounded-xl p-8">
+                            <div class="grid grid-cols-1 gap-6 mb-6">
+                                <div>
+                                    <label for="name" class="block text-orange-500 font-medium mb-2">Naam</label>
+                                    <input id="name" type="text" placeholder="Uw naam" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                                 </div>
-                                <button type="submit" class="w-48 bg-orange-600 text-white font-bold py-4 rounded-lg hover:bg-orange-700 transition duration-300 ease-in-out">Verzenden</button>
-                            </form>
-                        </div>
+                                <div>
+                                    <label for="email" class="block text-orange-500 font-medium mb-2">Email</label>
+                                    <input id="email" type="email" placeholder="Uw emailadres" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-orange-500 font-medium mb-2">Bericht</label>
+                                    <textarea id="message" placeholder="Uw bericht" rows="6" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-48 bg-orange-600 text-white font-bold py-4 rounded-lg hover:bg-orange-700 transition duration-300 ease-in-out">Verzenden</button>
+                        </form>
                     </div>
-                </section>
-
+                </div>
+            </section>
         </main>
 
         <footer class=" text-white text-center py-6 w-full mb-12">
@@ -229,6 +256,5 @@
 
             </div>
         </footer>
-
     </body>
 </x-guest-layout>

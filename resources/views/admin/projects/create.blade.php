@@ -5,7 +5,6 @@
         <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
-            <!-- Title -->
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-300">Title</label>
                 <input
@@ -20,7 +19,6 @@
                 @enderror
             </div>
 
-            <!-- Description -->
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-300">Description</label>
                 <textarea
@@ -54,21 +52,19 @@
                 @enderror
             </div>
 
-
-            <!-- Image -->
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-300">Image</label>
+                <label for="images" class="block text-sm font-medium text-gray-300">Images</label>
                 <input
                     type="file"
-                    name="image"
-                    id="image"
+                    name="images[]"
+                    id="images"
+                    multiple
                     class="mt-1 block w-full bg-gray-700 text-white rounded-lg border border-gray-600 focus:ring-orange-500 focus:border-orange-500 shadow-sm">
-                @error('image')
+                @error('images.*')
                 <p class="text-sm text-red-500 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Submit Button -->
             <button
                 type="submit"
                 class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2">
