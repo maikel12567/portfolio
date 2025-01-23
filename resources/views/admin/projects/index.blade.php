@@ -23,17 +23,18 @@
                 </div>
                 @endif
 
-                <div class="mb-4">
-                    @if($project->image_path)
-                    <img
-                        src="{{ asset('storage/' . $project->image_path) }}"
-                        alt="{{ $project->title }}"
-                        class="w-full h-40 object-cover rounded-lg">
-                    @else
-                    <div class="w-full h-40 bg-gray-700 rounded-lg flex items-center justify-center text-gray-400">
-                        No Image
+                <div class="swiper-container mb-4">
+                    <div class="swiper-wrapper">
+                        @foreach($project->images as $image)
+                        <div class="swiper-slide">
+                            <img
+                                src="{{ asset('storage/' . $image->image_path) }}"
+                                alt="{{ $project->title }}"
+                                class="w-full h-40 object-cover rounded-lg">
+                        </div>
+                        @endforeach
                     </div>
-                    @endif
+                    <div class="swiper-pagination"></div>
                 </div>
 
                 <h2 class="text-xl font-bold text-white mb-2">{{ $project->title }}</h2>
@@ -73,7 +74,6 @@
                             Delete
                         </button>
                     </form>
-
                 </div>
             </div>
             @empty
@@ -81,4 +81,22 @@
             @endforelse
         </div>
     </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1, 
+            spaceBetween: 10,
+            effect: 'fade', 
+            autoplay: {
+                delay: 5000, 
+                disableOnInteraction: false, 
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            loop: true, 
+        });
+    </script>
 </x-app-layout>

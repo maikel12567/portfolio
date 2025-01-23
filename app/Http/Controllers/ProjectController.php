@@ -9,10 +9,19 @@ use App\Models\Tag;
 class ProjectController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::all();
-        return view('admin.projects.index', compact('projects'));
+        $tags = Tag::all();
+
+        if ($request->has('tag') && $request->tag != '') {
+            $projects = Project::whereHas('tags', function ($query) use ($request) {
+                $query->where('tags.id', $request->tag);
+            })->get();
+        } else {
+            $projects = Project::all();
+        }
+
+        return view('admin.projects.index', compact('projects', 'tags'));
     }
 
     public function store(Request $request)
@@ -23,20 +32,23 @@ class ProjectController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'tags' => 'required|array',
             'tags.*' => 'exists:tags,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
-        $project = new Project();
-        $project->title = $validated['title'];
-        $project->description = $validated['description'];
-    
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('projects', 'public');
-            $project->image_path = $path;
-        }
-    
-        $project->save();
+
+        $project = Project::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+        ]);
+
         $project->tags()->sync($validated['tags']);
-    
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('projects', 'public');
+                $project->images()->create(['image_path' => $path]);
+            }
+        }
+
         return redirect()->route('projects.index')->with('success', 'Project created successfully!');
     }
 
@@ -61,18 +73,20 @@ class ProjectController extends Controller
             'tags' => 'required|array',
             'tags.*' => 'exists:tags,id',
         ]);
-    
+
         $project->title = $validated['title'];
         $project->description = $validated['description'];
-    
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('projects', 'public');
-            $project->image_path = $path;
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('projects', 'public');
+                $project->images()->create(['image_path' => $path]);
+            }
         }
-    
+
         $project->save();
-        $project->tags()->sync($validated['tags']); // Update tags
-    
+        $project->tags()->sync($validated['tags']);
+
         return redirect()->route('projects.index')->with('success', 'Project updated successfully!');
     }
 
@@ -81,10 +95,9 @@ class ProjectController extends Controller
         $request->validate([
             'project_name_confirmation' => ['required', 'string', 'in:' . $project->title],
         ]);
-    
+
         $project->delete();
-    
+
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully!');
     }
-    
 }
