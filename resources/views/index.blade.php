@@ -100,21 +100,32 @@
             <section class="mb-12 text-center">
                 <h2 class="text-3xl font-semibold text-orange-500 mb-8">Projecten</h2>
 
-                <div class="search__filters">
-                    <form method="GET" action="{{ route('projects.index') }}">
-                        <select name="type" class="search__filters-select">
-                            <option value="">All Types</option>
-                            <option value="web" {{ request('type') == 'web' ? 'selected' : '' }}>Web</option>
-                            <option value="native" {{ request('type') == 'native' ? 'selected' : '' }}>Native</option>
+                <div class="search__filters mb-8">
+                    <form method="GET" action="{{ route('index') }}" class="flex justify-center space-x-4">
+                        <select
+                            name="tag"
+                            id="tags"
+                            class="w-1/3 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="">Alle projecten</option>
+                            @foreach($tags as $tag)
+                            <option
+                                value="{{ $tag->id }}"
+                                {{ request('tag') == $tag->id ? 'selected' : '' }}>
+                                {{ $tag->name }}
+                            </option>
+                            @endforeach
                         </select>
-                        <button type="submit" class="ml-4 bg-orange-500 text-white py-2 px-4 rounded-lg">
+
+                        <button
+                            type="submit"
+                            class="bg-orange-500 text-white py-2 px-4 rounded-lg">
                             Filter
                         </button>
                     </form>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach ($projects as $project)
+                    @forelse ($projects as $project)
                     <div class="bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 relative">
                         @if($project->tags->isNotEmpty())
                         <div class="absolute top-2 left-2">
@@ -129,14 +140,20 @@
                         <div id="carousel{{ $project->id }}" class="carousel slide mb-4" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 @foreach($project->images as $index => $image)
-                                <li data-target="#carousel{{ $project->id }}" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+                                <li
+                                    data-target="#carousel{{ $project->id }}"
+                                    data-slide-to="{{ $index }}"
+                                    class="{{ $index == 0 ? 'active' : '' }}"></li>
                                 @endforeach
                             </ol>
 
                             <div class="carousel-inner">
                                 @foreach($project->images as $index => $image)
                                 <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $project->title }}" class="d-block w-100 h-56 object-cover">
+                                    <img
+                                        src="{{ asset('storage/' . $image->image_path) }}"
+                                        alt="{{ $project->title }}"
+                                        class="d-block w-100 h-56 object-cover" />
                                 </div>
                                 @endforeach
                             </div>
@@ -156,9 +173,12 @@
                             <p class="text-gray-300 mt-4">{{ $project->description }}</p>
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <p class="text-gray-400">Geen projecten gevonden. Probeer andere filters.</p>
+                    @endforelse
                 </div>
             </section>
+
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

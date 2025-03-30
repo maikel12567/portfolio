@@ -8,6 +8,14 @@
                 Create Project
             </a>
         </div>
+        
+        @if (session('success'))
+        <div
+            class="bg-green-500 text-white px-4 py-3 rounded-lg shadow-md mb-6 text-center"
+            role="alert">
+            {{ session('success') }}
+        </div>
+        @endif
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($projects as $project)
