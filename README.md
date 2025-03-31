@@ -9,6 +9,7 @@
 | Type      | Example |
 |-----------|-------------|
 | `feat`    | `feat(api): add pagination to product list` |
+| `wip`     | `wip: message displayed on home screen` |
 | `fix`     | `fix(ui): fix button alignment on mobile` |
 | `refactor`| `refactor(db): restructure migration files` |
 | `docs`    | `docs(readme): update installation guide` |
