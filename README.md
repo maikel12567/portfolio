@@ -30,3 +30,29 @@
 - Use pull requests for merging and require code reviews before approval.
 - Keep your branch updated with `main` by regularly pulling the latest changes.
 
+
+# Team Agreements
+
+> These agreements define our team's working expectations and responsibilities.
+
+---
+
+## Daily Standup
+- Every lesson starts with a **daily standup** to discuss progress and blockers.
+
+## Communication
+- **Absent from a lesson?** Ask in the Discord chat for a summary of what was covered.
+- If you're **late or absent**, communicate this with the team.
+
+## Contribution & Responsibility
+- If you haven't contributed to a task, your name will **not** be on the submission.
+- Ask for **feedback** from present team members before submitting any work.
+- The entire team is responsible for the **quality and completeness** of our work.
+- We **only push working code** to the repository.
+
+---
+
+
+
+
+
